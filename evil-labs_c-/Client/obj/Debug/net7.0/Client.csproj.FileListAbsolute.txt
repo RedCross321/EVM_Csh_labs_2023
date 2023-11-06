@@ -1,0 +1,15 @@
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\bin\Debug\net7.0\Client.exe
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\bin\Debug\net7.0\Client.deps.json
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\bin\Debug\net7.0\Client.runtimeconfig.json
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\bin\Debug\net7.0\Client.dll
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\bin\Debug\net7.0\Client.pdb
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\Client.csproj.AssemblyReference.cache
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\Client.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\Client.AssemblyInfoInputs.cache
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\Client.AssemblyInfo.cs
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\Client.csproj.CoreCompileInputs.cache
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\Client.dll
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\refint\Client.dll
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\Client.pdb
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\Client.genruntimeconfig.cache
+C:\Users\akbeke\Source\Repos\evil-labs_c-\Client\obj\Debug\net7.0\ref\Client.dll
