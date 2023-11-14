@@ -1,40 +1,41 @@
-﻿using System.IO.Pipes;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿utilizzando System.IO.Pipes;
+utilizzando System.Runtime.CompilerServices;
+utilizzando System.Runtime.InteropServices;
 
-namespace Client;
-class Program
+
+spazio dei nomi Client;
+classe Program
 {
-    public struct Ad
+    pubblica struttura Ad
     {
-        public int X;
-        public bool Podtv;
+        pubblica int X;
+        pubblica bool Podtv;
     }
-    public static void Main()
+    pubblica statica vuota Principale()
     {
-        try
+        trtentativay
         {
-            Console.WriteLine("Соединяю с базой\n");
-            var stream = new NamedPipeClientStream(".", "tonel", PipeDirection.InOut);
-            stream.Connect();
-            Console.WriteLine("Соединил, шеф!\n");
-            Console.WriteLine("Ждем-с данных\n");
-            while (true)
+            Consolle.Linea di scrittura("Соединяю с базой\n");
+            var flusso = nuova Flusso client pipe denominata(".", "tonel", PipeDirection.InOut);
+            flusso.Collegare();
+            Consolle.Linea di scrittura("Соединил, шеф!\n");
+            Consolle.Linea di scrittura("Ждем-с данных\n");
+            Mentre (vera)
             {
-                byte[] array = new byte[Unsafe.SizeOf<Ad>()];
-                stream.Read(array);
-                var answer = MemoryMarshal.Read<Ad>(array);
+                byte[] vettore = nuova byte[Unsafe.SizeOf<Ad>()];
+                flusso.Leggere(array);
+                var risposta = Maresciallo della Memoria.Leggere<Ad>(array);
 
-                Console.WriteLine($"Получил: {answer.X}, {answer.Podtv}\n");
-                answer.Podtv = true;
-                Console.WriteLine($"Отправил {answer.X}, {answer.Podtv}...\n");
+                Consolle.Linea di scrittura($"Получил: {answer.X}, {answer.Podtv}\n");
+                risposta.Podtv = vera;
+                Consolle.Linea di scrittura($"Отправил {answer.X}, {answer.Podtv}...\n");
 
-                byte[] spam = new byte[Unsafe.SizeOf<Ad>()];
-                MemoryMarshal.Write<Ad>(spam, ref answer);
-                stream.Write(spam);
+                byte[] spam = nuova byte[Unsafe.SizeOf<Ad>()];
+                Maresciallo della Memoria.Scrivere<Ad>(spam, ref risposta);
+                flusso.Scrivere(spam);
             }
         }
-        catch
+        presa
         {
         }
     }   
