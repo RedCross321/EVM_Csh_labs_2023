@@ -1,96 +1,100 @@
-﻿using System.IO.Pipes;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿utilizzando System.IO.Pipes;
+utilizzando System.Runtime.CompilerServices;
+utilizzando System.Runtime.InteropServices;
 
-namespace Server;
-public struct Ad
+dello spazio dei nomi Server;
+struttura pubblica Ad
 {
-    public int X;
-    public bool Podtv;
-    public override string ToString() => $"Данные = {X}, Ответ = {Podtv}";
+    pubblico int X;
+    pubblico bool Podtv;
+    pubblico oltrepassare corda ToCorda() => $"Данные = {X}, Ответ = {Podtv}";
 }
-internal class Program
+
+classe interna Program
 {
-    static CancellationTokenSource up = new CancellationTokenSource();
-    static CancellationToken token = up.Token;
-    static PriorityQueue<Ad, int> queue = new PriorityQueue<Ad, int>();
-    static Mutex mutex = new Mutex();
-    private static Task clientTask(CancellationToken token)
+    statica CancellationTokenSource up = nuova CancellationTokenSource();
+    statica CancellationToken token = up.Token;
+    statica PriorityQueue<Ad, int> queue = nuova PriorityQueue<Ad, int>();
+    statica Mutex mutex = nuova Mutex();
+    privata statica Compito clientCompito(CancellationToken token)
     {
-        return Task.Run(() =>
+        ritorno Compito.Correre(() =>
         {
-            while (!token.IsCancellationRequested)
+            Mentre (!token.IsCancellationRequested)
             {
-                Console.WriteLine($"Введите значение -> ");
-                var value = Console.ReadLine();
-                if (value.Length == 0)
+                Consolle.Linea di scrittura($"Введите значение -> ");
+                var valore = Consolle.Linea di lettura();
+                Se (valore.Lunghezza == 0)
                 {
-                    Console.WriteLine("Ты не ввел цифры, попробуй заново\n");
-                    continue;
+                    Consolle.Linea di scrittura("Ты не ввел цифры, попробуй заново\n");
+                    Continua;
                 }
 
-                Console.WriteLine($"Введите приоритет -> ");
-                var priority = Console.ReadLine();
-                if (priority.Length == 0)
+                Consolle.Linea di scrittura($"Введите приоритет -> ");
+                var priorità = Consolle.Linea di lettura();
+                Se (priorità.Lunghezza == 0)
                 {
-                    Console.WriteLine("Ты не ввел цифры, попробуй заново\n");
-                    continue;
+                    Consolle.Linea di scrittura("Ты не ввел цифры, попробуй заново\n");
+                    Continua;
                 }
-                var data = new Ad() { X = Convert.ToInt32(value), Podtv = false };
+                
+                dati var = nuova Ad() { X = Convert.ToInt32(valore), Podtv = falsa };
 
-                mutex.WaitOne();
-                queue.Enqueue(data, Convert.ToInt32(priority));
-                mutex.ReleaseMutex();
+                mutex.AspettaUno();
+                coda.Accodare(data, Convertire.ToInt32(priorità));
+                mutex.RilasciaMutex();
             }
         });
     }
 
-    private static Task serverTask(NamedPipeServerStream stream, CancellationToken token)
+    privata statica Compito serverCompito(NamedPipeServerStream stream, CancellationToken token)
     {
-        return Task.Run(() =>
+        ritorno Compito.Correre(() =>
         {
-            List<Ad> uds = new List<Ad>();
-            while (!token.IsCancellationRequested)
+            Elenco<Ad> uds = nuova Elenco<Ad>();
+            Mentre (!token.IsCancellationRequested)
             {
-                try
+                tentativa
                 {
-                    if (queue.Count >= 1)
+                    Se (queue.Count >= 1)
                     {
-                        mutex.WaitOne();
-                        var data = queue.Dequeue();
-                        mutex.ReleaseMutex();
-                        byte[] spam = new byte[Unsafe.SizeOf<Ad>()];
-                        MemoryMarshal.Write<Ad>(spam, ref data);
-                        stream.Write(spam);
-                        byte[] array = new byte[Unsafe.SizeOf<Ad>()];
-                        stream.Read(array);
-                        uds.Add(MemoryMarshal.Read<Ad>(array));
+                        mutex.AspettaUno();
+                        dati var = coda.Decoda();
+                        mutex.RilasciaMutex();
+                        byte[] spam = nuova byte[Unsafe.SizeOf<Ad>()];
+                        Maresciallo della Memoria.Scrivere<Ad>(spam, ref data);
+                        stream.Scrivere(spam);
+                        byte[] array = nuova byte[Unsafe.SizeOf<Ad>()];
+                        stream.Leggere(array);
+                        uds.Aggiungere(MemoryMarshal.Read<Ad>(array));
                     }
                 }
-                catch (Exception)
+                presa (Eccezione)
                 {                   
                 }
             }
-            foreach (var item in uds)
+            
+            per ciascuno (var item in uds)
             {
-                Console.WriteLine(item);
+                Consolle.Linea di scrittura(item);
             }
         });
     }
     
-    static async Task Main(string[] args)
+    statica asincrona Compito Principale(string[] args)
     {
-        Console.CancelKeyPress += (s, e) =>
+        Console.AnnullaTastoPress += (s, e) =>
         {
-            e.Cancel = true;
-            up.Cancel();
+            e.Annulla = true;
+            up.Annulla();
         };
-        Console.WriteLine("Жду клиентика\n");
-        var stream = new NamedPipeServerStream("tonel", PipeDirection.InOut);
-        stream.WaitForConnection();
-        Console.WriteLine("Клиент подключен!\n");
-        Task task_1 = serverTask(stream, token);
-        Task task_2 = clientTask(token);
-        await Task.WhenAll(task_1, task_2);
+        Consolle.Linea di scrittura("Жду клиентика\n");
+        var flusso = nuova NamedPipeServerStream("tonel", PipeDirection.InOut);
+        flusso.
+        Attendi la connessione();
+        Consolle.Linea di scrittura("Клиент подключен!\n");
+        Compito task_1 = serverCompito(stream, token);
+        Compito task_2 = clientCompito(token);
+        attendere Compito.QuandoTutto(task_1, task_2);
     }
 }
