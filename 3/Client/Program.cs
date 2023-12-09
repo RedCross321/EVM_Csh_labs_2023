@@ -25,7 +25,7 @@ class Program
             var stream = new NamedPipeClientStream(".", name, PipeDirection.InOut);
             await streamAsync.Connect();
             byte[] array = new byte[Unsafe.SizeOf<Ad>()];
-            stream.ReadAsync(array);
+            await stream.ReadAsync(array);
             var answer = MemoryMarshal.Read<Ad>(array);
 
             var result = 0.0;
