@@ -98,36 +98,33 @@ internal class Program
     }
     private static async Task runclient(CancellationToken token, List<Ud> uds, Ad data) 
     {
-        while (!token.IsCancellationRequested)
+        id++;
+        string name = $"tonel_{id}";
+        using (Process myProcess = new Process())
         {
-            id++;
-            string name = $"tonel_{id}";
-            using (Process myProcess = new Process())
-            {
-                myProcess.StartInfo.FileName = "C:\\Users\\akbeke\\source\\repos\\EVM_Csh_labs_2023\\3\\Client\\bin\\Debug\\net7.0\\Client.exe";
-                myProcess.StartInfo.Arguments = name;
-                myProcess.Start();
+            myProcess.StartInfo.FileName = "C:\\Users\\akbeke\\source\\repos\\EVM_Csh_labs_2023\\3\\Client\\bin\\Debug\\net7.0\\Client.exe";
+            myProcess.StartInfo.Arguments = name;
+            myProcess.Start();
 
 
-                var stream = new NamedPipeServerStream($"{name}", PipeDirection.InOut);
-                await stream.WaitForConnectionAsync();
+            var stream = new NamedPipeServerStream($"{name}", PipeDirection.InOut);
+            await stream.WaitForConnectionAsync();
 
-                byte[] spam = new byte[Unsafe.SizeOf<Ad>()];
+            byte[] spam = new byte[Unsafe.SizeOf<Ad>()];
 
-                MemoryMarshal.Write(spam, ref data);
+            MemoryMarshal.Write(spam, ref data);
 
-                stream.WriteAsync(spam, token);
-                byte[] array = new byte[Unsafe.SizeOf<Ud>()];
+            stream.WriteAsync(spam, token);
+            byte[] array = new byte[Unsafe.SizeOf<Ud>()];
+            
+            myProcess.WaitForExit();
+            
+            await stream.ReadAsync(array, token);
+
+            uds.Add(MemoryMarshal.Read<Ud>(array));
+
                 
-
-                await stream.ReadAsync(array, token);
-
-                uds.Add(MemoryMarshal.Read<Ud>(array));
-
-                    
-                myProcess.WaitForExit();
-            }
-
+            
         }
     }
     static async Task Main(string[] args)
